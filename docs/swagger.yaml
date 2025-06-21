@@ -1,0 +1,21 @@
+info:
+  contact: {}
+paths:
+  /books:
+    post:
+      consumes:
+      - application/json
+      description: Returns a welcome message
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Greet user
+      tags:
+      - example
+swagger: "2.0"

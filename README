@@ -1,0 +1,10 @@
+go get -u github.com/swaggo/swag/cmd/swag@latest
+go install github.com/swaggo/swag/cmd/swag@latest
+go get github.com/swaggo/gin-swagger
+go get github.com/swaggo/files
+
+Use below command to generate Swagger docs:
+swag init
+
+If your entry file is not main.go then you need to hit below query. Let's assume name of your entry file is myfile.go
+swag init --generalInfo myfile.go
