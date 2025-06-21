@@ -25,12 +25,14 @@ var books = []Book{
 
 var nextID = 3
 
-// @Summary Greet user
-// @Description Returns a welcome message
-// @Tags example
+// @Summary Create a new book
+// @Description Add a new book to the collection
+// @Tags books
 // @Accept json
 // @Produce json
-// @Success 200 {object} map[string]string
+// @Param book body Book true "Book to create"
+// @Success 201 {object} Book
+// @Failure 400 {object} map[string]string
 // @Router /books [post]
 func createBook(c *gin.Context) {
 	var newBook Book
@@ -44,12 +46,24 @@ func createBook(c *gin.Context) {
 	c.JSON(http.StatusCreated, newBook)
 }
 
-// Read All
+// @Summary Get all books
+// @Description Retrieve the list of books
+// @Tags books
+// @Produce json
+// @Success 200 {array} Book
+// @Router /books [get]
 func getBooks(c *gin.Context) {
 	c.JSON(http.StatusOK, books)
 }
 
-// Read by ID
+// @Summary Get book by ID
+// @Description Retrieve a book by its ID
+// @Tags books
+// @Produce json
+// @Param id path int true "Book ID"
+// @Success 200 {object} Book
+// @Failure 404 {object} map[string]string
+// @Router /books/{id} [get]
 func getBookByID(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	for _, b := range books {
@@ -61,7 +75,27 @@ func getBookByID(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{"message": "Book not found"})
 }
 
-// Update
+// @Summary Welcome
+// @Description Welcome message for the Book API
+// @Tags root
+// @Produce json
+// @Success 200 {object} map[string]string
+// @Router / [get]
+func weclome(c *gin.Context) {
+	c.JSON(200, gin.H{"message": "Welcome to the Book API. Visit /swagger/index.html for docs."})
+}
+
+// @Summary Update a book
+// @Description Update a book by ID
+// @Tags books
+// @Accept json
+// @Produce json
+// @Param id path int true "Book ID"
+// @Param book body Book true "Updated Book"
+// @Success 200 {object} Book
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /books/{id} [put]
 func updateBook(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	var updatedBook Book
@@ -82,7 +116,13 @@ func updateBook(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{"message": "Book not found"})
 }
 
-// Delete
+// @Summary Delete a book
+// @Description Delete a book by ID
+// @Tags books
+// @Param id path int true "Book ID"
+// @Success 200 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /books/{id} [delete]
 func deleteBook(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	for i, b := range books {
@@ -95,9 +135,15 @@ func deleteBook(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{"message": "Book not found"})
 }
 
+// @title Book API
+// @version 1.0
+// @description A simple CRUD API built with Go and Gin
+// @host localhost:8080
+// @BasePath /
 func main() {
 	router := gin.Default()
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/", weclome)
 	router.GET("/books", getBooks)
 	router.GET("/books/:id", getBookByID)
 	router.POST("/books", createBook)
